@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Test Suit">
+
+	<test name="Registation and Log In Test">
+		<classes>
+			<class name="testNG.RegistartionTest" />
+			<class name="testNG.LoginTest" />
+		</classes>
+	</test>
+	
+</suite>
