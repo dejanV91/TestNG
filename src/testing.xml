@@ -3,9 +3,17 @@
 <suite name="Test Suit">
 
 	<test name="Registation and Log In Test">
+	
+	<parameter name="first" value="d"/>
+	<parameter name="last" value="d"/>
+	<parameter name="user" value="d"/>
+	<parameter name="email" value="d@d.com"/>
+	<parameter name="pass" value="d"/>
+	
 		<classes>
 			<class name="testNG.RegistartionTest" />
 			<class name="testNG.LoginTest" />
+			<class name="testNG.OneLogInAndReg" />
 		</classes>
 	</test>
 	

@@ -2,22 +2,18 @@ package testNG;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-public class LoginTest {
+public class OneLogInAndReg {
 	static WebDriver dr;
-
+	
 	@BeforeTest
 	public static void setBrowser() throws InterruptedException {
 		dr = new ChromeDriver();
@@ -27,29 +23,43 @@ public class LoginTest {
 		Thread.sleep(2000);
 	}
 	
-	@DataProvider
-	public Iterator<Object[]> getLogInData() throws IOException {
-		ArrayList<Object[]> a=ExcelUtil.LogIn();
-		return a.iterator();	
-	}
-	
-	@Test(priority=1,groups="LogIn")
-	public void title() {
-		String tl=dr.getTitle();
-		assertEquals(tl,"Home");
-	}
-	
-	@Test(dependsOnGroups="Registration",dataProvider="getLogInData", priority=2,groups="LogIn")
-	public void tstLogIn(String userName, String password) {
-		dr.navigate().to(Constant.HOME_PAGE);
+	@Test(groups="Registration")
+	@Parameters({"first","last", "user", "email", "pass"})
+	public void oneRegis(String first,String last,String user, String email, String pass) {
+		WebElement f = dr.findElement(By.xpath(Constant.FIRST_NAME));
+		f.clear();
+		f.sendKeys(first);
 		
+		WebElement l=dr.findElement(By.xpath(Constant.LAST_NAME));
+		l.clear();
+		l.sendKeys(last);
+		
+		WebElement u=dr.findElement(By.xpath(Constant.USER_NAME_REG));
+		u.clear();
+		u.sendKeys(user);
+		
+		WebElement em=dr.findElement(By.xpath(Constant.EMAIL));
+		em.clear();
+		em.sendKeys(email);
+		
+		WebElement pas=dr.findElement(By.xpath(Constant.PASWORD_REG));
+		pas.clear();
+		pas.sendKeys(pass);
+
+		dr.findElement(By.xpath(Constant.REGISTER_BUTTON)).click();
+		
+	}
+	
+	@Test (dependsOnGroups="Registration",groups="LogIn")
+	@Parameters({"user","pass"})
+	public void OneLogIn(String u,String p) {
 		WebElement user=dr.findElement(By.xpath(Constant.USER_NAME_LOG));
 		user.clear();
-		user.sendKeys(userName);
+		user.sendKeys(u);
 		
 		WebElement pass=dr.findElement(By.xpath(Constant.PASSWORD_LOG));
 		pass.clear();
-		pass.sendKeys(password);
+		pass.sendKeys(p);
 		
 		dr.findElement(By.xpath(Constant.LOG_IN_BUTTON)).click();
 		
@@ -57,7 +67,7 @@ public class LoginTest {
 		
 		assertEquals(act, Constant.SUCCESS_LOG);
 	}
-
+	
 	@AfterTest
 	public static void closeBrowser() {
 		dr.quit();
